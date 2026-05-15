@@ -31,3 +31,20 @@ steps:
 - script: |
     npx playwright test
   displayName: 'Run Playwright tests'
+
+  # Publish test results
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/results.xml'
+
+    - script: |
+    npx playwright show-report
+  displayName: 'Generate HTML Report'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: 'playwright-report'
+    artifactName: 'playwright-report'
+    failTaskOnFailedTests: true
+  condition: always()
